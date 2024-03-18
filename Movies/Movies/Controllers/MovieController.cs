@@ -27,7 +27,7 @@ namespace Movies.Controllers
 
 
         [HttpPost]
-        [Route("Movies")]
+        [Route("InsertMovies")]
         
         public string InsertData(Movie mvs)
         {
