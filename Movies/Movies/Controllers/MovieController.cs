@@ -29,7 +29,7 @@ namespace Movies.Controllers
         [HttpPost]
         [Route("InsertMovies")]
         
-        public string InsertData(Movie mvs)
+        public IActionResult InsertData(Movie mvs)
         {
             try
             {
@@ -50,11 +50,13 @@ namespace Movies.Controllers
                     }
                 }
 
-                return "ok";
+                return Ok("Insert data successfully");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return "failed";
+
+                Response.StatusCode = BadRequest().StatusCode;
+                return new JsonResult(new {  title = "Error",message = e.Message.ToString() });
 
             }
         }
@@ -62,7 +64,7 @@ namespace Movies.Controllers
         [HttpGet]
         [Route("Movies")]
 
-        public JsonResult ShowData()
+        public IActionResult ShowData()
         {
             SqlDataReader reader = null;
             DataTable dt = new DataTable();
@@ -95,14 +97,14 @@ namespace Movies.Controllers
             if(movieData.Count > 0)
                 return new JsonResult(movieData);
             else
-                return new JsonResult("Data Tidak Ditemukan");
+                return new NotFoundResult();
         }
 
         //[HttpGet("Movies/{id}")]
         [HttpGet]
         [Route("Movies/{id}")]
 
-        public JsonResult ShowDataParam([FromRoute(Name = "id")] int id)
+        public IActionResult ShowDataParam([FromRoute(Name = "id")] int id)
         {
             SqlDataReader reader = null;
             DataTable dt = new DataTable();
@@ -135,13 +137,14 @@ namespace Movies.Controllers
             if (movieData.Count > 0)
                 return new JsonResult(movieData);
             else
-                return new JsonResult("Data Tidak Ditemukan");
+                return new NotFoundResult();
         }
+
 
 
         [HttpPut]
         [Route("UpdateMovie/{id}")]
-        public JsonResult UpdateMovie(Movie mv)
+        public IActionResult UpdateMovie(Movie mv)
         {
             try
             {
@@ -164,18 +167,20 @@ namespace Movies.Controllers
                     }
                 }
 
-                return new JsonResult("Update Movie berhasil");
+                return Ok("Update data successfully");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new JsonResult("Update Movie failed");
+
+                Response.StatusCode = BadRequest().StatusCode;
+                return new JsonResult(new { title = "Error", message = e.Message.ToString() });
 
             }
         }
 
         [HttpDelete]
         [Route("DeleteMovie/{id}")]
-        public JsonResult DeleteMovie([FromRoute(Name = "id")] int id)
+        public IActionResult DeleteMovie([FromRoute(Name = "id")] int id)
         {
             try
             {
@@ -193,11 +198,13 @@ namespace Movies.Controllers
                     }
                 }
 
-                return new JsonResult("Delete Movie Success");
+                return Ok("Delete data successfully");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new JsonResult("Delete Movie failed");
+
+                Response.StatusCode = BadRequest().StatusCode;
+                return new JsonResult(new { title = "Error", message = e.Message.ToString() });
 
             }
         }
